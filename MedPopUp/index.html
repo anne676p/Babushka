@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="da">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Bistro Babushka</title>
+
+
+    <style>
+        @import url("https://use.typekit.net/dth1ixs.css");
+
+        body,
+        html {
+            height: 100%;
+        }
+
+        header {
+            text-align: center;
+        }
+
+        img {
+            height: 65vw;
+            object-fit: cover;
+            filter: sepia(5%);
+        }
+
+        h1,
+        button {
+            font-family: source-code-pro, monospace;
+            font-style: normal;
+            font-size: 1em;
+
+        }
+
+        h2 {
+            font-family: source-code-pro, monospace;
+            font-weight: 800;
+            font-size: 1em;
+            font-style: normal;
+            padding-left: 10px;
+        }
+
+        h1 {
+            font-size: 2em;
+        }
+
+        p {
+            font-family: mr-eaves-xl-modern, sans-serif;
+            font-weight: 200;
+            font-style: normal;
+            padding-left: 10px;
+            padding-right: 10px;
+
+        }
+
+        .pris {
+            color: #B50027;
+            bottom: 10px;
+            font-family: source-code-pro, monospace;
+            font-weight: 600;
+            font-style: normal;
+            font-size: 2em;
+
+
+        }
+
+
+        article {
+            overflow: hidden;
+            box-shadow: 0px 0px 6px 0px rgba(179, 179, 179, 1);
+            line-height: 1em;
+
+        }
+
+
+        .data-container {
+            display: grid;
+            margin-left: 10vw;
+            margin-right: 10vw;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-gap: 20px;
+            cursor: pointer;
+        }
+
+
+        .zoom {
+            transition: transform .2s;
+
+        }
+
+        .zoom:hover {
+            transform: scale(1.1);
+            filter: brightness(60%);
+        }
+
+
+        button {
+            width: 168px;
+            height: 50px;
+            margin-left: 10px;
+            margin-right: 10px;
+            color: white;
+            background-color: black;
+            cursor: pointer;
+
+        }
+
+        .hover:hover {
+            background-color: #B50027;
+        }
+
+        #detalje {
+            position: fixed;
+            top: 2vw;
+            width: 96vw;
+            background-color: rgba(0, 0, 0, 0.5);
+            overflow: scroll;
+        }
+
+        #detalje h2 {
+            font-size: 1.4em;
+        }
+
+        #detalje_menu {
+            margin: 1em 5em;
+            background-color: white;
+        }
+
+        #detalje_menu img {
+            width: 400px;
+            height: 200px;
+        }
+
+        .skjul {
+            display: none;
+        }
+
+        #luk {
+            position: absolute;
+            z-index: 1;
+            top: 4vw;
+            left: 70vw;
+            height: 30px;
+            width: 30px;
+            background-color: white;
+            color: black;
+            border-color: white;
+            font-size: 1.6em;
+        }
+
+        #logo {
+            height: 10vw;
+            width: 41vw;
+            margin: 3vw;
+        }
+
+        .splash {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(imgs/logo/russian-cuisine-cooking-class_4gYGgXn.jpg);
+            height: 300px;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            position: relative;
+            margin-bottom: 3vw;
+        }
+
+        @media only screen and (min-width: 600px) {
+            img {
+                width: 300px;
+                height: 300px;
+            }
+
+            #detalje {
+            top: 2vw;
+            left: 25vw;
+            width: 50vw;
+        }
+             #detalje_menu {
+            padding-left: 2vw;
+        }
+
+            #detalje_menu img {
+            width: 500px;
+            height: 400px;
+        }
+
+             #luk {
+            position: absolute;
+            z-index: 1;
+            left: 39vw;
+            top: 2vw;
+            height: 50px;
+            width: 50px;
+            background-color: white;
+            color: black;
+            border-color: white;
+            font-size: 2em;
+        }
+             #detalje h2 {
+            font-size: 1.8em;
+        }
+
+        }
+
+    </style>
+</head>
+
+<body>
+    <header>
+        <div> <img id="logo" src="imgs/logo/bistro_babushka.svg"></div>
+        <div class="splash"></div>
+        <nav>
+            <button class="filter hover" data-kategori="alle"> Alle </button>
+            <button class="filter hover" data-kategori="forretter"> Forretter </button>
+            <button class="filter hover" data-kategori="hovedretter"> Hovedretter </button>
+            <button class="filter hover" data-kategori="desserter"> Desserter </button>
+            <button class="filter hover" data-kategori="sideorders"> Sideorders </button>
+            <button class="filter hover" data-kategori="drikkevarer"> Drikkevarer </button>
+            <h1>Alle</h1>
+        </nav>
+    </header>
+
+    <section class="data-container"></section>
+    <template>
+        <article class="menu">
+            <img class="zoom" src="" alt="">
+            <h2></h2>
+            <p class="kategori"></p>
+            <p class="beskrivelse"></p>
+            <p class="pris"> </p>
+        </article>
+    </template>
+    <section id="detalje" class="skjul">
+        <button id="luk">X</button>
+        <article id="detalje_menu">
+            <h2></h2>
+            <img src="" alt="">
+            <p class="lang_beskrivelse"></p>
+            <p class="pris"> </p>
+        </article>
+    </section>
+
+</body>
+
+<script>
+    const endpoint = "https://spreadsheets.google.com/feeds/list/17Dd7DvkPaFamNUdUKlrFgnH6POvBJXac7qyiS6zNRw0/od6/public/values?alt=json";
+    let menukort = [];
+    let filter = "alle";
+    let detalje = document.querySelector("#detalje");
+
+    document.addEventListener("DOMContentLoaded", start);
+
+    function start() {
+        loadData();
+        buttons();
+    }
+
+    async function loadData() {
+        const response = await fetch(endpoint);
+        menukort = await response.json();
+        console.log(menukort);
+
+        visMenukort();
+    }
+
+    function visMenukort() {
+        const container = document.querySelector(".data-container");
+        const template = document.querySelector("template");
+
+        container.innerHTML = "";
+
+        menukort.feed.entry.forEach(menu => {
+            if (filter == "alle" || filter == menu.gsx$kategori.$t) {
+                let klon = template.cloneNode(true).content;
+                klon.querySelector("h2").textContent = menu.gsx$navn.$t;
+                klon.querySelector(".beskrivelse").textContent += menu.gsx$kort.$t;
+                klon.querySelector(".pris").textContent = menu.gsx$pris.$t + ",-";
+                klon.querySelector("img").src = "imgs/large/" + menu.gsx$billede.$t + ".jpg";
+                klon.querySelector("img").alt = "billede af" + menu.navn;
+                klon.querySelector(".menu").addEventListener("click", () => visDetalje(menu));
+
+                container.appendChild(klon);
+            }
+        })
+    }
+
+    function visDetalje(menu) {
+        detalje.classList.remove("skjul");
+        detalje.querySelector("button").addEventListener("click", () => detalje.classList.add("skjul"));
+
+        detalje.querySelector("h2").textContent = menu.gsx$navn.$t;
+        detalje.querySelector("img").src = "imgs/large/" + menu.gsx$billede.$t + ".jpg";
+        detalje.querySelector("img").alt = "billede af" + menu.navn;
+        detalje.querySelector(".lang_beskrivelse").textContent = menu.gsx$lang.$t;
+        detalje.querySelector(".pris").textContent = menu.gsx$pris.$t + ",-";
+
+
+    }
+
+
+    function buttons() {
+        document.querySelectorAll(".filter").forEach(elm => {
+            elm.addEventListener("click", filtrering);
+        })
+    }
+
+    function filtrering() {
+        filter = this.dataset.kategori;
+        document.querySelector("h1").textContent = this.textContent;
+        document.querySelectorAll(".filter").forEach(elm => {
+            elm.classList.remove("valgt");
+        })
+        this.classList.add("valgt");
+        visMenukort();
+    }
+
+</script>
+
+</html>

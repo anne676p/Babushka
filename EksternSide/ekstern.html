@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+
+    <style>
+        @import url("https://use.typekit.net/dth1ixs.css");
+
+        body,
+        html {
+            height: 100%;
+        }
+
+        header {
+            text-align: center;
+        }
+
+        img {
+            width: 300px;
+            height: 300px;
+            object-fit: cover;
+            filter: sepia(5%);
+        }
+
+        h1,
+        button {
+            font-family: source-code-pro, monospace;
+            font-style: normal;
+            font-size: 1em;
+
+        }
+
+        h2 {
+            font-family: source-code-pro, monospace;
+            font-weight: 800;
+            font-size: 1em;
+            font-style: normal;
+            padding-left: 10px;
+        }
+
+        h1 {
+            font-size: 2em;
+        }
+
+        p {
+            font-family: mr-eaves-xl-modern, sans-serif;
+            font-weight: 200;
+            font-style: normal;
+            padding-left: 10px;
+            padding-right: 10px;
+
+        }
+
+        .pris {
+            color: #B50027;
+            bottom: 10px;
+            font-family: source-code-pro, monospace;
+            font-weight: 600;
+            font-style: normal;
+            font-size: 2em;
+
+
+        }
+
+
+        #detalje {
+            position: fixed;
+            top: 2vw;
+            left: 5vw;
+
+        }
+
+        #detalje p,
+        #detalje h2 {
+            margin-left: 1vw;
+        }
+
+        #detalje h2 {
+            font-size: 1.8em;
+        }
+
+        #detalje_menu {
+            margin: 1em 5em;
+            background-color: white;
+        }
+
+        #detalje_menu img {
+            width: 300px;
+            height: 200px;
+            margin: 1em 1.8em;
+
+        }
+
+        #luk {
+            position: absolute;
+            z-index: 1;
+            left: 1vw;
+            top: 3.5vw;
+            background-color: white;
+            color: black;
+            border-color: white;
+            font-size: 2em;
+        }
+
+        @media only screen and (min-width: 600px) {
+            img {
+                width: 300px;
+                height: 300px;
+            }
+
+            #detalje {
+                top: 2vw;
+                left: 25vw;
+                width: 50vw;
+            }
+
+            #detalje_menu {
+                padding-left: 2vw;
+            }
+
+            #detalje_menu img {
+                width: 500px;
+                height: 400px;
+            }
+
+            #luk {
+                position: absolute;
+                z-index: 1;
+                top: 1.5vw;
+                height: 50px;
+                width: 50px;
+                background-color: white;
+                color: black;
+                border-color: white;
+                font-size: 2em;
+            }
+
+            #detalje h2 {
+                font-size: 1.8em;
+            }
+
+        }
+
+    </style>
+</head>
+
+<body>
+    <section id="detalje" class="skjul">
+        <button id="luk">⬅︎</button>
+        <article id="detalje_menu">
+            <h2></h2>
+            <img src="" alt="">
+            <p class="lang_beskrivelse"></p>
+            <p class="pris"> </p>
+        </article>
+    </section>
+
+</body>
+<script>
+    const endpoint = "https://spreadsheets.google.com/feeds/list/17Dd7DvkPaFamNUdUKlrFgnH6POvBJXac7qyiS6zNRw0/od6/public/values?alt=json";
+    let menukort = [];
+    let filter = "alle";
+    let detalje = document.querySelector("#detalje");
+
+    const urlParams = new URLSearchParams(window.location.search)
+    const id = urlParams.get("id");
+    console.log(id);
+
+    document.addEventListener("DOMContentLoaded", start);
+
+    function start() {
+        loadData();
+
+    }
+
+    async function loadData() {
+        const response = await fetch(endpoint);
+        menukort = await response.json();
+        console.log(menukort);
+
+        visMenukort();
+    }
+
+    function visMenukort() {
+
+        menukort.feed.entry.forEach(menu => {
+            if (menu.gsx$id.$t == id) {
+                detalje.querySelector("h2").textContent = menu.gsx$navn.$t;
+                detalje.querySelector("img").src = "imgs/large/" + menu.gsx$billede.$t + ".jpg";
+                detalje.querySelector("img").alt = "billede af" + menu.navn;
+                detalje.querySelector(".lang_beskrivelse").textContent = menu.gsx$lang.$t;
+                detalje.querySelector(".pris").textContent = menu.gsx$pris.$t + ",-";
+
+            }
+        })
+
+        document.querySelector("#detalje #luk").addEventListener("click", (skjulDetalje));
+    }
+
+
+    function skjulDetalje() {
+        history.back();
+    }
+
+</script>
+
+</html>
